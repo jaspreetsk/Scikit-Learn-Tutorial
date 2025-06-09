@@ -1,0 +1,125 @@
+I am learning how to use Scikit Learn using vscode, wsl2, ubuntu.
+
+The link of the video is: https://youtu.be/hDKCxebp88A?si=Xg_BX9qvnvbXf9lC by freeCodeCamp.org
+
+used scikit learn, pandas, matplotlib, seaborn, ploty, 
+
+---------------------------------------------------------------------------------------------------
+
+Lesson 1 - Linear Regression and Gradient Descent
+
+
+
+
+Linear Regression with Scikit Learn - Machine Learning with Python
+This tutorial is a part of Zero to Data Science Bootcamp by Jovian and Machine Learning with Python: Zero to GBMs
+
+Predicting medical expenses using linear regression
+
+Problem Statement
+This tutorial takes a practical and coding-focused. We'll define the terms machine learning and linear regression in the context of a problem, and later generalize their definitions. We'll work through a typical machine learning problem step-by-step:
+
+QUESTION: ACME Insurance Inc. offers affordable health insurance to thousands of customer all over the United States. As the lead data scientist at ACME, you're tasked with creating an automated system to estimate the annual medical expenditure for new customers, using information such as their age, sex, BMI, children, smoking habits and region of residence.
+
+Estimates from your system will be used to determine the annual insurance premium (amount paid every month) offered to the customer. Due to regulatory requirements, you must be able to explain why your system outputs a certain prediction.
+
+You're given a CSV file containing verified historical data, consisting of the aforementioned information and the actual medical charges incurred by over 1300 customers.
+alt
+
+Dataset source: https://github.com/stedy/Machine-Learning-with-R-datasets
+--------------------------------------------------------------------------------------
+
+
+Lesson 2 - Logistic Regression with Scikit Learn - Machine Learning with Python
+
+Problem Statement
+This tutorial takes a practical and coding-focused approach. We'll learn how to apply logistic regression to a real-world dataset from Kaggle:
+
+QUESTION: The Rain in Australia dataset contains about 10 years of daily weather observations from numerous Australian weather stations. Here's a small sample from the dataset:
+
+As a data scientist at the Bureau of Meteorology, you are tasked with creating a fully-automated system that can use today's weather data for a given location to predict whether it will rain at the location tomorrow.
+
+use these codelines (by me) as scikit learn has made some changes in the OneHotEncoder()'s parameters such as now being 
+sparse_output instead of sparse and in list(encoder.get_feature.....) it is now encoder.get_feature_names_out instead of 
+encoder.get_feature_names:
+
+# One-hot encode categorical features
+encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore').fit(raw_df[categorical_cols])
+encoded_cols = list(encoder.get_feature_names_out(categorical_cols))
+
+instead of 
+
+# One-hot encode categorical features
+encoder = OneHotEncoder(sparse=False, handle_unknown='ignore').fit(raw_df[categorical_cols])
+encoded_cols = list(encoder.get_feature_names(categorical_cols))
+
+in order for open datasets to fetch the data from Kaggle's website it needs your Kaggle account's username and API key which
+you can get by first creating a Kaggle account then going to kaggle.com then clicking on the account logo in the top right part of the webpage a sidebar will open. Click on settings with a gear icon then under Account section there will be an API subsection. In the api subsection click on create new token and then Kaggle will give you a Kaggle.json file which will contain your username and key, use the username and key value when asked by opendatasets library function when downloading the weatherAUS.csv dataset
+
+Dataset source: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package
+
+------------------------------------------------------------------------------------------
+
+Lesson-3: Decision Trees and Random Forests
+
+Problem Statement
+
+This tutorial takes a practical and coding-focused approach. We'll learn how to use _decision trees_ and _random forests_ to solve a real-world problem from [Kaggle](https://kaggle.com/datasets):
+
+QUESTION: The Rain in Australia dataset contains about 10 years of daily weather observations from numerous Australian weather stations. Here's a small sample from the dataset:
+
+ As a data scientist at the Bureau of Meteorology, you are tasked with creating a fully-automated system that can use today's weather data for a given location to predict whether it will rain at the location tomorrow. 
+
+
+use the below code to find the correlation between the 'Sales' and other columns:
+
+selected_cols=['Store','DayOfWeek','Date','Sales','Customers','Open','Promo','SchoolHoliday','CompetitionDistance','CompetitionOpenSinceMonth','CompetitionOpenSinceYear','Promo2','Promo2SinceWeek','Promo2SinceYear']
+correlation_matrix=merged_df[selected_cols].corr()
+print(correlation_matrix['Sales'].sort_values(ascending=False))
+
+instead of using :
+merged_df.corr()['Sales'].sort_values(ascending=False)
+
+as it will show this error:
+
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+Cell In[33], line 1
+----> 1 merged_df.corr()['Sales'].sort_values(ascending=False)
+
+File ~/jskre/lib/python3.12/site-packages/pandas/core/frame.py:11049, in DataFrame.corr(self, method, min_periods, numeric_only)
+  11047 cols = data.columns
+  11048 idx = cols.copy()
+> 11049 mat = data.to_numpy(dtype=float, na_value=np.nan, copy=False)
+  11051 if method == "pearson":
+  11052     correl = libalgos.nancorr(mat, minp=min_periods)
+
+File ~/jskre/lib/python3.12/site-packages/pandas/core/frame.py:1993, in DataFrame.to_numpy(self, dtype, copy, na_value)
+   1991 if dtype is not None:
+   1992     dtype = np.dtype(dtype)
+-> 1993 result = self._mgr.as_array(dtype=dtype, copy=copy, na_value=na_value)
+   1994 if result.dtype is not dtype:
+   1995     result = np.asarray(result, dtype=dtype)
+
+File ~/jskre/lib/python3.12/site-packages/pandas/core/internals/managers.py:1694, in BlockManager.as_array(self, dtype, copy, na_value)
+   1692         arr.flags.writeable = False
+   1693 else:
+-> 1694     arr = self._interleave(dtype=dtype, na_value=na_value)
+   1695     # The underlying data was copied within _interleave, so no need
+   1696     # to further copy if copy=True or setting na_value
+   1698 if na_value is lib.no_default:
+
+File ~/jskre/lib/python3.12/site-packages/pandas/core/internals/managers.py:1753, in BlockManager._interleave(self, dtype, na_value)
+   1751     else:
+   1752         arr = blk.get_values(dtype)
+-> 1753     result[rl.indexer] = arr
+   1754     itemmask[rl.indexer] = 1
+   1756 if not itemmask.all():
+
+ValueError: could not convert string to float: 'a'
+
+created various models such as LinearRegression, Ridge, Lasso, ElasticNet, SGDRegressor
+,decision tree, random forest and uploaded the test predicitons to Kaggle using a random forest with  a public score of 0.14320 and a private score of 0.17106.
+
+Dataset source: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
